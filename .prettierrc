@@ -1,0 +1,21 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "jsxSingleQuote": true,
+  "printWidth": 80,
+  "overrides": [
+    {
+      "files": ["src/**/*.js", "src/**/*.jsx"],
+      "options": {
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "useTabs": false,
+        "jsxSingleQuote": true,
+        "printWidth": 80
+      }
+    }
+  ]
+}
