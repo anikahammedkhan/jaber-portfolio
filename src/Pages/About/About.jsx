@@ -5,7 +5,7 @@ import { ArrowOutward } from '../../Assets/Icons/ArrowOutward'
 const About = () => {
   return (
     <div>
-      <div className='border-t border-b border-[#373737] mt-[45px]'>
+      <div className='border-t border-b border-[#373737]'>
         <div className='max-w-[1440px] mx-auto px-[50px]'>
           <div className='h-[697px] flex items-center'>
             <div className='border-r border-[#373737] flex items-center justify-center w-[754px] h-[697px]'>

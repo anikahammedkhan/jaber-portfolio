@@ -4,27 +4,30 @@
   padding: 15px;
   position: relative;
 }
+
 .nav-link:hover {
   color: white;
 }
 
-/* Initial state of the underline */
 .nav-link::after {
-  content: '';
   display: block;
   width: 0px;
   height: 2px;
-  background-color: white;
-  transition: width 0.3s ease-in-out; /* Add smooth transition */
+  background-color: transparent;
+  transition:
+    width 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
 }
-
-/* Hover state of the underline */
 .nav-link:hover::after {
-  width: 100%; /* Expand the underline on hover */
+  width: 100%;
+  background-color: white;
 }
 
-/* Active state of the underline */
 .nav-link.active::after {
   width: 100%;
-  /* Expand the underline for the active link */
+  background-color: white;
+}
+
+.nav-link.active {
+  color: white;
 }

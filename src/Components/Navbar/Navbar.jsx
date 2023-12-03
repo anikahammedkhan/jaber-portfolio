@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import './Navbar.css'
 
 const Navbar = () => {
+  const [isScrolling, setIsScrolling] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolling(true)
+      } else {
+        setIsScrolling(false)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   const menu = (
     <>
       <li className='flex justify-center'>
@@ -27,9 +42,16 @@ const Navbar = () => {
       <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
       <div className='drawer-content flex flex-col'>
         {/* Navbar */}
-        <div className='max-w-[1440px] mx-auto navbar relative flex justify-between px-[118px] bg-[#0c0c0c]'>
+        <div
+          className={`max-w-[1440px] mx-auto navbar relative flex justify-between px-[118px] bg-[#0c0c0c] bg-opacity-40 h-[100px] ${
+            isScrolling ? '' : 'border-b border-[#373737]'
+          }`}
+          style={{
+            backdropFilter: 'blur(20px)',
+          }}
+        >
           <Link to='/'>
-            <p className='text-[#BCBCBC] text-[20px]'>Jaber Hossain</p>
+            <p className='text-[#BCBCBC] text-[24px]'>Jaber Hossain</p>
           </Link>
           <div className='flex-none lg:hidden'>
             <label
