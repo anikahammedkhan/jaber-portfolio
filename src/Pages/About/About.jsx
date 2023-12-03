@@ -1,6 +1,7 @@
 import React from 'react'
 import img from '../../Assets/Images/profileImg.png'
 import { ArrowOutward } from '../../Assets/Icons/ArrowOutward'
+import { Link } from 'react-router-dom'
 
 const About = () => {
   return (
@@ -22,12 +23,15 @@ const About = () => {
                   your <br />
                   product's full potential with a UI/UX designer by your side.
                 </p>
-                <div className='flex items-center justify-center border-2 border-[#373737] w-[168px] h-[65px] mt-[85px]'>
+                <Link
+                  to='/contact'
+                  className='flex items-center justify-center border-2 border-[#373737] w-[168px] h-[65px] mt-[85px]'
+                >
                   <p className='text-[24px] text-[#BCBCBC] font-bold'>
                     Contact
                   </p>
                   <ArrowOutward />
-                </div>
+                </Link>
               </div>
             </div>
             <div>
