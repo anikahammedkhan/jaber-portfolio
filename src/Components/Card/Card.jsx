@@ -4,7 +4,7 @@ import demo from '../../Assets/Images/homeDemo.png'
 
 const Card = ({ img, link, title }) => {
   return (
-    <div className='w-[576px] h-[432px]'>
+    <div className='md:w-[576px] w-[328px] md:h-[432px] h-[246px]'>
       <Link to={link}>
         <img src={demo} alt='' />
       </Link>

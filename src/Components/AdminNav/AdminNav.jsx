@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import './Navbar.css'
+import './../Navbar/Navbar.css'
 
-const Navbar = () => {
+const AdminNav = () => {
   const [isScrolling, setIsScrolling] = useState(false)
   useEffect(() => {
     const handleScroll = () => {
@@ -21,17 +21,12 @@ const Navbar = () => {
   const menu = (
     <>
       <li className='flex justify-center'>
-        <NavLink to='/' className='nav-link'>
+        <NavLink to='/dashboard/works' className='nav-link'>
           Works
         </NavLink>
       </li>
       <li className='flex justify-center'>
-        <NavLink to='/about' className='nav-link'>
-          About
-        </NavLink>
-      </li>
-      <li className='flex justify-center'>
-        <NavLink to='/blogs' className='nav-link'>
+        <NavLink to='/dashboard/blogs' className='nav-link'>
           Blogs
         </NavLink>
       </li>
@@ -50,7 +45,7 @@ const Navbar = () => {
             backdropFilter: 'blur(20px)',
           }}
         >
-          <Link to='/'>
+          <Link to='/dashboard'>
             <p className='text-[#BCBCBC] text-[24px]'>Jaber Hossain</p>
           </Link>
           <div className='flex-none lg:hidden'>
@@ -88,7 +83,7 @@ const Navbar = () => {
           className='drawer-overlay'
         ></label>
         <ul className='flex flex-col pt-10 w-[200px] min-h-full bg-[#002366] text-white font-semibold'>
-          <Link to='/'>
+          <Link to='/dashboard'>
             <p>Jaber Hossain</p>
           </Link>
           {menu}
@@ -98,4 +93,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default AdminNav
