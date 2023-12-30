@@ -1,12 +1,39 @@
 import React, { useRef, useState } from 'react'
+import imageCompression from 'browser-image-compression'
 
 const CreateProject = () => {
   const fileInputRef = useRef(null)
   const [file, setFile] = useState('')
-  const handleFileUpload = (event) => {
-    console.log(event.target.files[0].name)
+  const [base64Image, setBase64Image] = useState('')
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0]
     setFile(event.target.files[0].name)
+    if (file) {
+      try {
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        }
+        const compressedFile = await imageCompression(file, options)
+        const reader = new FileReader()
+        reader.readAsDataURL(compressedFile)
+        reader.onload = () => {
+          const base64String = reader.result
+          setBase64Image(base64String)
+        }
+        reader.onerror = (error) => {
+          console.error('Error reading the compressed file:', error)
+        }
+      } catch (error) {
+        console.error('Error compressing the file:', error)
+      }
+    }
   }
+
+  console.log(base64Image)
+
   return (
     <div className='h-[80vh] flex items-center justify-center'>
       <div className='flex flex-col justify-center items-center'>
