@@ -7,11 +7,11 @@ import Error from '../Pages/Error/Error'
 import Contact from '../Pages/Contact/Contact'
 import Login from '../Pages/Login/Login'
 import Dashboard from '../Pages/Admin/Dashboard/Dashboard'
-import PrivateRoute from './PrivateRoute'
 import AdminLayout from '../Layout/AdminLayout'
 import BlogsA from '../Pages/Admin/Blogs/Blogs'
 import CreateBlog from '../Pages/Admin/Form/CreateBlog'
 import CreateProject from '../Pages/Admin/Form/CreateProject'
+import AuthChecker from './AuthChecker'
 
 const Router = createBrowserRouter([
   {
@@ -29,17 +29,47 @@ const Router = createBrowserRouter([
   {
     path: '/dashboard',
     element: (
-      // <PrivateRoute>
-      //   <AdminLayout/>
-      // </PrivateRoute>
-      <AdminLayout />
+      <AuthChecker>
+        <AdminLayout />
+      </AuthChecker>
     ),
     children: [
-      { path: '/dashboard', element: <Dashboard /> },
-      { path: '/dashboard/works', element: <Dashboard /> },
-      { path: '/dashboard/blogs', element: <BlogsA /> },
-      { path: '/dashboard/create-blog', element: <CreateBlog /> },
-      { path: '/dashboard/create-project', element: <CreateProject /> },
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/dashboard/works',
+        element: (
+          <AuthChecker>
+            <Dashboard />
+          </AuthChecker>
+        ),
+      },
+      {
+        path: '/dashboard/blogs',
+        element: (
+          <AuthChecker>
+            <BlogsA />
+          </AuthChecker>
+        ),
+      },
+      {
+        path: '/dashboard/create-blog',
+        element: (
+          <AuthChecker>
+            <CreateBlog />
+          </AuthChecker>
+        ),
+      },
+      {
+        path: '/dashboard/create-project',
+        element: (
+          <AuthChecker>
+            <CreateProject />
+          </AuthChecker>
+        ),
+      },
       { path: '*', element: <Error /> },
     ],
   },

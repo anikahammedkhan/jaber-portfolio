@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { ArrowOutward } from '../../Assets/Icons/ArrowOutward'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
   const handleLogin = async (event) => {
     event.preventDefault()
     const apiUrl = 'https://jaber-portfolio-server.vercel.app/auth'
@@ -17,10 +19,13 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       })
-
       if (response.ok) {
         const userData = await response.json()
-        console.log('Authentication successful:', userData)
+        if (userData?.message === 'Authentication successful.') {
+          localStorage.setItem('userData', JSON.stringify(userData))
+          console.log('Redirecting to dashboard...')
+          navigate('/dashboard/')
+        }
       } else {
         console.error('Authentication failed')
       }
