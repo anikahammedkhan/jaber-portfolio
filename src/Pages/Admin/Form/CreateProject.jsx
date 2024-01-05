@@ -7,12 +7,6 @@ const CreateProject = () => {
   const [base64Image, setBase64Image] = useState('')
   // added comment
   // added comment
-  // added comment
-  // added comment
-  // added comment
-  // added comment
-  // added comment
-  // added comment
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0]
