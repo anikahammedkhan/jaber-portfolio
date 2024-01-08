@@ -1,40 +1,44 @@
 import React, { useRef, useState } from 'react'
-import imageCompression from 'browser-image-compression'
+import axios from 'axios'
 
 const CreateProject = () => {
   const fileInputRef = useRef(null)
   const [file, setFile] = useState('')
-  const [base64Image, setBase64Image] = useState('')
-  // added comment
-  // added commentadfasdf
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0]
     setFile(event.target.files[0].name)
-    if (file) {
-      try {
-        const options = {
-          maxSizeMB: 0.5,
-          maxWidthOrHeight: 800,
-          useWebWorker: true,
-        }
-        const compressedFile = await imageCompression(file, options)
-        const reader = new FileReader()
-        reader.readAsDataURL(compressedFile)
-        reader.onload = () => {
-          const base64String = reader.result
-          setBase64Image(base64String)
-        }
-        reader.onerror = (error) => {
-          console.error('Error reading the compressed file:', error)
-        }
-      } catch (error) {
-        console.error('Error compressing the file:', error)
-      }
+  }
+  const userData = JSON.parse(localStorage.getItem('userData'))
+  const uuid = userData.uuid
+  const token = userData.token
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const title = formData.get('title')
+    const link = formData.get('link')
+    const imageFile = formData.get('image')
+    const headers = {
+      uuid: uuid,
+      token: token,
+    }
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('link', link)
+      formData.append('image', imageFile)
+      const response = await axios.post(
+        'https://jaber-portfolio-server.vercel.app/projects',
+        formData,
+        { headers: headers },
+      )
+      console.log('Response:', response.data)
+      setFile('')
+      event.target.reset()
+    } catch (error) {
+      console.error('Error creating project:', error)
     }
   }
-
-  console.log(base64Image)
 
   return (
     <div className='h-[80vh] flex items-center justify-center'>
@@ -44,7 +48,7 @@ const CreateProject = () => {
         </h1>
         <form
           className='w-[430px] flex flex-col items-center p-2'
-          //   onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
         >
           <div className='flex flex-row-reverse w-full items-center mb-[20px] gap-2'>
             <input
@@ -52,6 +56,7 @@ const CreateProject = () => {
               onChange={handleFileUpload}
               type='file'
               style={{ display: 'none' }}
+              name='image'
               // multiple={false}
             />
             <button

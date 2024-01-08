@@ -1,12 +1,49 @@
 import React, { useRef, useState } from 'react'
+import axios from 'axios'
 
 const CreateBlog = () => {
   const fileInputRef = useRef(null)
   const [file, setFile] = useState('')
-  const handleFileUpload = (event) => {
-    console.log(event.target.files[0].name)
+
+  const handleFileUpload = async (event) => {
+    event.preventDefault()
     setFile(event.target.files[0].name)
   }
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+  const uuid = userData.uuid
+  const token = userData.token
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const title = formData.get('title')
+    const subTitle = formData.get('sub-title')
+    const link = formData.get('link')
+    const imageFile = formData.get('image')
+    const headers = {
+      uuid: uuid,
+      token: token,
+    }
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('subtitle', subTitle)
+      formData.append('link', link)
+      formData.append('image', imageFile)
+      const response = await axios.post(
+        'https://jaber-portfolio-server.vercel.app/blog',
+        formData,
+        { headers: headers },
+      )
+      console.log('Response:', response.data)
+      setFile('')
+      event.target.reset()
+    } catch (error) {
+      console.error('Error creating project:', error)
+    }
+  }
+
   return (
     <div className='h-[80vh] flex items-center justify-center'>
       <div className='flex flex-col justify-center items-center'>
@@ -15,14 +52,15 @@ const CreateBlog = () => {
         </h1>
         <form
           className='w-[430px] flex flex-col items-center p-2'
-          //   onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
         >
           <div className='flex flex-row-reverse w-full items-center mb-[20px] gap-2'>
             <input
               ref={fileInputRef}
-              onChange={handleFileUpload}
               type='file'
               style={{ display: 'none' }}
+              name='image'
+              onChange={handleFileUpload}
               // multiple={false}
             />
             <button
