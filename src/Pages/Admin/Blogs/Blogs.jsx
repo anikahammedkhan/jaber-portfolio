@@ -6,6 +6,7 @@ import axios from 'axios'
 
 const BlogsA = () => {
   const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     axios
