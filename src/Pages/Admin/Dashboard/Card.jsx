@@ -58,7 +58,7 @@ const Card = ({ img, link, title, id, setProjects, setOpen, setModalData }) => {
 
   return (
     <div className='relative md:w-[576px] w-[328px] md:h-[432px] h-[246px]'>
-      <Link to={link}>
+      <Link to={link} target='_blank' rel='noopener noreferrer'>
         <img src={img} alt={title} />{' '}
       </Link>
       <div className='flex absolute top-[20px] left-[20px] gap-2'>
