@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Card from './Card'
 import { ArrowOutward } from '../../../Assets/Icons/ArrowOutward'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { Modal } from 'react-responsive-modal'
+import 'react-responsive-modal/styles.css'
+import toast from 'react-hot-toast'
+import './custom-styling.css'
 
 const Dashboard = () => {
   const [projects, setProjects] = useState([])
+  const [open, setOpen] = useState(false)
+  console.log(open, 'modal')
 
   useEffect(() => {
     axios
@@ -40,11 +46,134 @@ const Dashboard = () => {
             title={item.title}
             id={item._id}
             setProjects={setProjects}
+            setOpen={setOpen}
           />
         ))}
       </div>
+      {open ? <EditModal open={open} setOpen={setOpen} /> : <></>}
     </div>
   )
 }
 
 export default Dashboard
+
+export const EditModal = ({ open, setOpen }) => {
+  const fileInputRef = useRef(null)
+  const [file, setFile] = useState('')
+
+  const handleFileUpload = (event) => {
+    setFile(event.target.files[0].name)
+  }
+  const userData = JSON.parse(localStorage.getItem('userData'))
+  const uuid = userData.uuid
+  const token = userData.token
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const title = formData.get('title')
+    const link = formData.get('link')
+    const imageFile = formData.get('image')
+    const headers = {
+      uuid: uuid,
+      token: token,
+    }
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('link', link)
+      formData.append('image', imageFile)
+      const response = await axios.post(
+        'https://jaber-portfolio-server.vercel.app/projects',
+        formData,
+        { headers: headers },
+      )
+      console.log('Response:', response.data)
+      setFile('')
+      toast.success('Project Created Successfully!')
+      event.target.reset()
+    } catch (error) {
+      console.error('Error creating project:', error)
+      toast.error('Error creating project')
+    }
+  }
+  const myRef = useRef(null)
+  const closeIcon = (
+    <svg fill='none' viewBox='0 0 15 15' height='3em' width='3em'>
+      <path
+        fill='currentColor'
+        fillRule='evenodd'
+        d='M11.782 4.032a.575.575 0 10-.813-.814L7.5 6.687 4.032 3.218a.575.575 0 00-.814.814L6.687 7.5l-3.469 3.468a.575.575 0 00.814.814L7.5 8.313l3.469 3.469a.575.575 0 00.813-.814L8.313 7.5l3.469-3.468z'
+        clipRule='evenodd'
+      />
+    </svg>
+  )
+
+  return (
+    <>
+      <div ref={myRef} />
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        center
+        closeIcon={closeIcon}
+        container={myRef.current}
+        classNames={{
+          overlay: 'customOverlay',
+          modal: 'customModal',
+        }}
+      >
+        <div className='flex flex-col justify-center items-center'>
+          <h1 className='text-[36px] font-bold text-center mb-[40px]'>
+            Edit :
+          </h1>
+          <form
+            className='w-[430px] flex flex-col items-center p-2'
+            onSubmit={handleSubmit}
+          >
+            <div className='flex flex-row-reverse w-full items-center mb-[20px] gap-2'>
+              <input
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                type='file'
+                style={{ display: 'none' }}
+                name='image'
+                // multiple={false}
+              />
+              <button
+                className='w-[160px] bg-[#0C0C0C] h-[36px] border-[#373737] border focus:border-[#373737] px-[10px]'
+                onClick={() => fileInputRef.current.click()}
+              >
+                Upload Image
+              </button>
+              {file ? <p>{file}</p> : ''}
+            </div>
+            <input
+              type='text'
+              className='w-[430px] bg-[#0C0C0C] h-[56px] border-[#373737] border focus:border-[#373737] text-[20px] px-[20px] mb-[20px]'
+              placeholder='Title'
+              name='title'
+              id='title'
+              required
+            />
+            <input
+              type='text'
+              className='w-[430px] bg-[#0C0C0C] h-[56px] border-[#373737] border focus:border-[#373737] text-[20px] px-[20px] mb-[20px]'
+              placeholder='Link'
+              name='link'
+              id='link'
+              required
+            />
+            <button
+              type='submit'
+              value='Send'
+              className='flex items-center justify-center border-2 border-[#373737] w-[268px] h-[65px] bg-[#141414] mt-5 text-[24px] font-bold gap-2'
+            >
+              <p>Update Project</p>
+            </button>
+          </form>
+        </div>
+      </Modal>
+    </>
+  )
+}

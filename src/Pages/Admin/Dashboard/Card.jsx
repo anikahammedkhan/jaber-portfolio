@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const Card = ({ img, link, title, id, setProjects }) => {
+const Card = ({ img, link, title, id, setProjects, setOpen }) => {
   const userData = JSON.parse(localStorage.getItem('userData'))
   const uuid = userData.uuid
   const token = userData.token
@@ -39,13 +39,25 @@ const Card = ({ img, link, title, id, setProjects }) => {
     }
   }
 
+  const handleEdit = () => {
+    const confirmEdit = window.confirm(
+      'Are you sure you want to edit this project?',
+    )
+    if (confirmEdit) {
+      setOpen(true)
+    }
+  }
+
   return (
     <div className='relative md:w-[576px] w-[328px] md:h-[432px] h-[246px]'>
       <Link to={link}>
         <img src={img} alt={title} />{' '}
       </Link>
       <div className='flex absolute top-[20px] left-[20px] gap-2'>
-        <div className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60 cursor-pointer'>
+        <div
+          className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60 cursor-pointer'
+          onClick={handleEdit}
+        >
           Edit
         </div>
         <div
