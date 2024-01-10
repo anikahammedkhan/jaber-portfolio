@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const Card = ({ img, link, title, id, setProjects, setOpen }) => {
+const Card = ({ img, link, title, id, setProjects, setOpen, setModalData }) => {
   const userData = JSON.parse(localStorage.getItem('userData'))
   const uuid = userData.uuid
   const token = userData.token
@@ -44,7 +44,15 @@ const Card = ({ img, link, title, id, setProjects, setOpen }) => {
       'Are you sure you want to edit this project?',
     )
     if (confirmEdit) {
-      setOpen(true)
+      axios
+        .get(`https://jaber-portfolio-server.vercel.app/projects/${id}`)
+        .then((response) => {
+          setModalData(response.data)
+          setOpen(true)
+        })
+        .catch((error) => {
+          toast.error('Error opening modal:', error)
+        })
     }
   }
 

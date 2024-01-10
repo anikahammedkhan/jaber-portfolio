@@ -11,8 +11,7 @@ import './custom-styling.css'
 const Dashboard = () => {
   const [projects, setProjects] = useState([])
   const [open, setOpen] = useState(false)
-  console.log(open, 'modal')
-
+  const [modalData, setModalData] = useState([])
   useEffect(() => {
     axios
       .get('https://jaber-portfolio-server.vercel.app/projects')
@@ -47,19 +46,44 @@ const Dashboard = () => {
             id={item._id}
             setProjects={setProjects}
             setOpen={setOpen}
+            setModalData={setModalData}
           />
         ))}
       </div>
-      {open ? <EditModal open={open} setOpen={setOpen} /> : <></>}
+      {open ? (
+        <EditModal
+          open={open}
+          setOpen={setOpen}
+          modalData={modalData}
+          setProjects={setProjects}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
 
 export default Dashboard
 
-export const EditModal = ({ open, setOpen }) => {
+export const EditModal = ({ open, setOpen, modalData, setProjects }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    link: '',
+    image: '',
+  })
   const fileInputRef = useRef(null)
   const [file, setFile] = useState('')
+
+  useEffect(() => {
+    if (modalData) {
+      setFormData({
+        title: modalData.title || '',
+        link: modalData.link || '',
+        image: modalData.image.data || '',
+      })
+    }
+  }, [modalData])
 
   const handleFileUpload = (event) => {
     setFile(event.target.files[0].name)
@@ -83,15 +107,24 @@ export const EditModal = ({ open, setOpen }) => {
       formData.append('title', title)
       formData.append('link', link)
       formData.append('image', imageFile)
-      const response = await axios.post(
-        'https://jaber-portfolio-server.vercel.app/projects',
+      const response = await axios.put(
+        `https://jaber-portfolio-server.vercel.app/projects/${modalData?._id}`,
         formData,
         { headers: headers },
       )
       console.log('Response:', response.data)
       setFile('')
-      toast.success('Project Created Successfully!')
+      toast.success('Project Updated Successfully!')
       event.target.reset()
+      setOpen(false)
+      axios
+        .get('https://jaber-portfolio-server.vercel.app/projects')
+        .then((response) => {
+          setProjects(response.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching blog data:', error)
+        })
     } catch (error) {
       console.error('Error creating project:', error)
       toast.error('Error creating project')
@@ -125,7 +158,7 @@ export const EditModal = ({ open, setOpen }) => {
       >
         <div className='flex flex-col justify-center items-center'>
           <h1 className='text-[36px] font-bold text-center mb-[40px]'>
-            Edit :
+            Edit : {modalData?.title}
           </h1>
           <form
             className='w-[430px] flex flex-col items-center p-2'
@@ -138,6 +171,7 @@ export const EditModal = ({ open, setOpen }) => {
                 type='file'
                 style={{ display: 'none' }}
                 name='image'
+                required
                 // multiple={false}
               />
               <button
@@ -154,6 +188,7 @@ export const EditModal = ({ open, setOpen }) => {
               placeholder='Title'
               name='title'
               id='title'
+              defaultValue={modalData?.title}
               required
             />
             <input
@@ -162,6 +197,7 @@ export const EditModal = ({ open, setOpen }) => {
               placeholder='Link'
               name='link'
               id='link'
+              defaultValue={modalData?.link}
               required
             />
             <button
