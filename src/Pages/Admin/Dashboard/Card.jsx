@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
-const Card = ({ img, link, title, id }) => {
+const Card = ({ img, link, title, id, setProjects }) => {
   const userData = JSON.parse(localStorage.getItem('userData'))
   const uuid = userData.uuid
   const token = userData.token
@@ -21,11 +22,19 @@ const Card = ({ img, link, title, id }) => {
         })
         .then((response) => {
           console.log('Project deleted successfully:', response.data)
-          // Perform any UI updates or removal of the deleted project card
+          toast.success('Project deleted successfully !')
+          axios
+            .get('https://jaber-portfolio-server.vercel.app/projects')
+            .then((response) => {
+              setProjects(response.data)
+            })
+            .catch((error) => {
+              console.error('Error fetching blog data:', error)
+            })
         })
         .catch((error) => {
           console.error('Error deleting project:', error)
-          // Handle error scenarios or show an error message to the user
+          toast.error('Error deleting project')
         })
     }
   }
@@ -36,11 +45,11 @@ const Card = ({ img, link, title, id }) => {
         <img src={img} alt={title} />{' '}
       </Link>
       <div className='flex absolute top-[20px] left-[20px] gap-2'>
-        <div className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60'>
+        <div className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60 cursor-pointer'>
           Edit
         </div>
         <div
-          className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60'
+          className='text-[16px] font-bold text-[#BCBCBC] px-[24px] py-[8px] bg-black bg-opacity-50 hover:bg-opacity-60 cursor-pointer'
           onClick={handleDelete}
         >
           Delete

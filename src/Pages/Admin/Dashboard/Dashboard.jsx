@@ -39,6 +39,7 @@ const Dashboard = () => {
             link={item.link}
             title={item.title}
             id={item._id}
+            setProjects={setProjects}
           />
         ))}
       </div>

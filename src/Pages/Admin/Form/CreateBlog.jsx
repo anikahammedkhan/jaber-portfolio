@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const CreateBlog = () => {
   const fileInputRef = useRef(null)
@@ -38,9 +39,11 @@ const CreateBlog = () => {
       )
       console.log('Response:', response.data)
       setFile('')
+      toast.success('Successfully Created Blog!')
       event.target.reset()
     } catch (error) {
-      console.error('Error creating project:', error)
+      console.error('Error creating blog:', error)
+      toast.error('Error creating blog')
     }
   }
 

@@ -41,6 +41,7 @@ const BlogsA = () => {
             link={item.link}
             title={item.title}
             subtitle={item.subtitle}
+            setBlogs={setBlogs}
           />
         ))}
       </div>

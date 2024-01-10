@@ -1,58 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BlogCard from '../../Components/BlogCard/BlogCard'
+import axios from 'axios'
 
 const Blogs = () => {
-  const demoData = [
-    {
-      id: 1,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 2,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 3,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 4,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 5,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 6,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-    {
-      id: 7,
-      imageUrl: 'https://picsum.photos/200/300',
-      link: '/',
-      title: "Canberra's Best",
-    },
-  ]
+  const [mappingData, setMappingData] = useState([])
+  useEffect(() => {
+    axios
+      .get('https://jaber-portfolio-server.vercel.app/blog')
+      .then((response) => {
+        setMappingData(response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching Blog data:', error)
+      })
+  }, [])
+
   return (
     <div className='max-w-[1440px] mx-auto px-[118px]'>
       <div className='grid grid-cols-2 gap-x-[50px] gap-y-[70px] my-[120px]'>
-        {demoData?.map((item) => (
+        {mappingData?.map((item) => (
           <BlogCard
-            key={item.id}
-            img={item.imageUrl}
+            key={item._id}
+            img={
+              item.image &&
+              `data:${item.image.contentType};base64,${item.image.data}`
+            }
+            subtitle={item.subtitle}
             link={item.link}
             title={item.title}
           />

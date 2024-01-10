@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const CreateProject = () => {
   const fileInputRef = useRef(null)
   const [file, setFile] = useState('')
 
-  const handleFileUpload = async (event) => {
+  const handleFileUpload = (event) => {
     setFile(event.target.files[0].name)
   }
   const userData = JSON.parse(localStorage.getItem('userData'))
@@ -34,9 +35,11 @@ const CreateProject = () => {
       )
       console.log('Response:', response.data)
       setFile('')
+      toast.success('Project Created Successfully!')
       event.target.reset()
     } catch (error) {
       console.error('Error creating project:', error)
+      toast.error('Error creating project')
     }
   }
 
