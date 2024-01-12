@@ -12,6 +12,8 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([])
   const [open, setOpen] = useState(false)
   const [modalData, setModalData] = useState([])
+
+  // comment added
   useEffect(() => {
     axios
       .get('https://jaber-portfolio-server.vercel.app/projects')
